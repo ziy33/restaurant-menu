@@ -22,6 +22,11 @@ app.use(session({
   cookie: { maxAge: 24 * 60 * 60 * 1000 } // 24 hours
 }));
 
+// Root redirect
+app.get('/', (req, res) => {
+  res.redirect('/menu.html');
+});
+
 // Serve static files
 app.use(express.static(__dirname));
 app.use('/uploads', express.static(UPLOADS_DIR));
