@@ -1,0 +1,315 @@
+{
+    "restaurant": {
+        "name": "卤肉 重庆特色",
+        "subtitle": "正宗重庆风味 · 传统工艺",
+        "name_id": "Lu Rou Citaan Khas Chongqing",
+        "subtitle_id": "Rasa Autentik Chongqing · Tradisi Turun-Temurun"
+    },
+    "categories": [
+        {
+            "id": "dry-pot",
+            "name": "干锅系列",
+            "name_id": "Seri Dry Pot",
+            "sort": 1
+        },
+        {
+            "id": "braised",
+            "name": "红烧系列",
+            "name_id": "Seri Braised",
+            "sort": 2
+        },
+        {
+            "id": "stir-fry",
+            "name": "爆炒系列",
+            "name_id": "Seri Tumis",
+            "sort": 3
+        },
+        {
+            "id": "signature",
+            "name": "特色招牌",
+            "name_id": "Menu Andalan",
+            "sort": 4
+        },
+        {
+            "id": "cold-dishes",
+            "name": "凉拌小菜",
+            "name_id": "Hidangan Dingin",
+            "sort": 6
+        },
+        {
+            "id": "soups",
+            "name": "汤品",
+            "name_id": "Sup",
+            "sort": 7
+        },
+        {
+            "id": "noodles",
+            "name": "麵條系列",
+            "name_id": "Seri Mie Daging Sapi",
+            "sort": 8
+        }
+    ],
+    "dishes": [
+        {
+            "id": 1,
+            "category_id": "dry-pot",
+            "name": "干锅猪排骨",
+            "name_id": "Dry Pot Tulang Iga Babi",
+            "price": 138000,
+            "image": "dish_6a461a7531da69.65740974.jpg",
+            "sort": 1
+        },
+        {
+            "id": 2,
+            "category_id": "dry-pot",
+            "name": "干锅肥肠",
+            "name_id": "Dry Pot Usus Babi",
+            "price": 128000,
+            "image": "dish_6a461b2eb483b3.32432469.jpg",
+            "sort": 2
+        },
+        {
+            "id": 3,
+            "category_id": "dry-pot",
+            "name": "干锅猪蹄",
+            "name_id": "Dry Pot Kaki Babi",
+            "price": 128000,
+            "image": "dish_6a461b44862122.96902171.jpg",
+            "sort": 3
+        },
+        {
+            "id": 4,
+            "category_id": "dry-pot",
+            "name": "干锅鸡",
+            "name_id": "Dry Pot Ayam",
+            "price": 128000,
+            "image": "dish_6a461e32214724.73087733.jpg",
+            "sort": 4
+        },
+        {
+            "id": 5,
+            "category_id": "dry-pot",
+            "name": "干锅猪肚丝",
+            "name_id": "Dry Pot Perut Babi Iris",
+            "price": 128000,
+            "image": "dish_6a461e72e5c3c4.81674188.jpg",
+            "sort": 5
+        },
+        {
+            "id": 6,
+            "category_id": "braised",
+            "name": "红烧羊排骨",
+            "name_id": "Braised Tulang Iga Kambing",
+            "price": 228000,
+            "image": "dish_6a461b5b03a567.66211437.jpg",
+            "sort": 1
+        },
+        {
+            "id": 7,
+            "category_id": "braised",
+            "name": "红烧牛排骨",
+            "name_id": "Braised Tulang Iga Sapi",
+            "price": 158000,
+            "image": "dish_6a461b65b97e93.76216061.jpg",
+            "sort": 2
+        },
+        {
+            "id": 8,
+            "category_id": "braised",
+            "name": "红烧猪蹄",
+            "name_id": "Braised Kaki Babi",
+            "price": 88000,
+            "image": "dish_6a461b75199e55.33720410.jpg",
+            "sort": 3
+        },
+        {
+            "id": 9,
+            "category_id": "stir-fry",
+            "name": "爆炒猪耳朵",
+            "name_id": "Tumis Telinga Babi",
+            "price": 88000,
+            "image": "dish_6a461b850d7b55.44411214.jpg",
+            "sort": 1
+        },
+        {
+            "id": 10,
+            "category_id": "stir-fry",
+            "name": "爆炒猪肚丝",
+            "name_id": "Tumis Perut Babi Iris",
+            "price": 88000,
+            "image": "dish_6a461b917fe432.05624011.jpg",
+            "sort": 2
+        },
+        {
+            "id": 11,
+            "category_id": "stir-fry",
+            "name": "回锅肉",
+            "name_id": "Hui Guo Rou (Babi Masak Dua Kali)",
+            "price": 88000,
+            "image": "dish_6a461b9b4b5249.18895717.jpg",
+            "sort": 3
+        },
+        {
+            "id": 12,
+            "category_id": "signature",
+            "name": "孜然猪排骨",
+            "name_id": "Tulang Iga Babi Cumin",
+            "price": 98000,
+            "image": "dish_6a461bc9a7c4b6.78584628.jpg",
+            "sort": 1
+        },
+        {
+            "id": 13,
+            "category_id": "stir-fry",
+            "name": "麻婆豆腐",
+            "name_id": "Mapo Tahu",
+            "price": 58000,
+            "image": "dish_6a461bf2236fe5.26010603.jpg",
+            "sort": 1
+        },
+        {
+            "id": 14,
+            "category_id": "stir-fry",
+            "name": "清炒豌豆角",
+            "name_id": "Tumis Polong Kacang",
+            "price": 58000,
+            "image": "dish_6a461bfb6cf933.73246308.jpg",
+            "sort": 2
+        },
+        {
+            "id": 15,
+            "category_id": "stir-fry",
+            "name": "西红柿炒蛋",
+            "name_id": "Orak Arik Tomat Telur",
+            "price": 32000,
+            "image": "dish_6a461c07e377f6.65628542.jpg",
+            "sort": 3
+        },
+        {
+            "id": 16,
+            "category_id": "cold-dishes",
+            "name": "夫妻肺片",
+            "name_id": "Fuqi Feipian (Irisan Daging Pedas)",
+            "price": 108000,
+            "image": "dish_6a461e4b150b71.49376967.jpg",
+            "sort": 1
+        },
+        {
+            "id": 17,
+            "category_id": "cold-dishes",
+            "name": "凉拌牛肉",
+            "name_id": "Daging Sapi Dingin Pedas",
+            "price": 88000,
+            "image": "dish_6a461c9c7e6976.64161159.jpg",
+            "sort": 2
+        },
+        {
+            "id": 18,
+            "category_id": "cold-dishes",
+            "name": "凉拌猪耳朵",
+            "name_id": "Telinga Babi Dingin Pedas",
+            "price": 88000,
+            "image": "dish_6a461c94223fc5.10544879.jpg",
+            "sort": 3
+        },
+        {
+            "id": 19,
+            "category_id": "cold-dishes",
+            "name": "凉拌猪舌",
+            "name_id": "Lidah Babi Dingin Pedas",
+            "price": 88000,
+            "image": "dish_6a461e5c4dc1e2.20824481.jpg",
+            "sort": 4
+        },
+        {
+            "id": 20,
+            "category_id": "cold-dishes",
+            "name": "凉拌黄瓜",
+            "name_id": "Mentimun Dingin Pedas",
+            "price": 30000,
+            "image": "dish_6a461c5fc91869.57939149.jpg",
+            "sort": 5
+        },
+        {
+            "id": 21,
+            "category_id": "cold-dishes",
+            "name": "花生米",
+            "name_id": "Kacang Tanah Goreng",
+            "price": 30000,
+            "image": "dish_6a461c6c16cc51.57018032.jpg",
+            "sort": 6
+        },
+        {
+            "id": 22,
+            "category_id": "signature",
+            "name": "狼牙土豆",
+            "name_id": "Kentang Goreng Bergelombang",
+            "price": 30000,
+            "image": "dish_6a461bd27e68b0.16623936.jpg",
+            "sort": 7
+        },
+        {
+            "id": 23,
+            "category_id": "soups",
+            "name": "猪蹄炖豆腐汤",
+            "name_id": "Sup Kaki Babi Tahu",
+            "price": 88000,
+            "image": "dish_6a461c4f112d94.18236464.jpg",
+            "sort": 1
+        },
+        {
+            "id": 24,
+            "category_id": "noodles",
+            "name": "麻辣牛肉面",
+            "name_id": "Mie Daging Sapi Pedas",
+            "price": 50000,
+            "image": "dish_6a461c2a1cc218.80597200.jpg",
+            "sort": 1
+        },
+        {
+            "id": 25,
+            "category_id": "noodles",
+            "name": "金汤牛肉面",
+            "name_id": "Mie Daging Sapi Kuah Kuning",
+            "price": 50000,
+            "image": "dish_6a461c3a51be61.64016990.jpg",
+            "sort": 2
+        },
+        {
+            "id": 26,
+            "category_id": "noodles",
+            "name": "清汤牛肉面",
+            "name_id": "Mie Daging Sapi Kuah Bening",
+            "price": 50000,
+            "image": "dish_6a461c4433cd04.39741051.jpg",
+            "sort": 3
+        },
+        {
+            "id": 27,
+            "category_id": "cold-dishes",
+            "name": "涼拌手撕鷄",
+            "name_id": "Salad Ayam Suwir",
+            "price": 88000,
+            "image": "dish_6a472df16ef947.96707940.jpg",
+            "sort": 7
+        },
+        {
+            "id": 28,
+            "category_id": "noodles",
+            "name": "麻辣鷄絲面",
+            "name_id": "Mi Ayam Suwir Pedas",
+            "price": 50000,
+            "image": "dish_6a4862066f2905.40022681.jpg",
+            "sort": 7
+        },
+        {
+            "id": 29,
+            "category_id": "noodles",
+            "name": "宜宾燃面",
+            "name_id": "Yibin Ranmian",
+            "price": 36000,
+            "image": "dish_6a492981ed5737.76290184.jpeg",
+            "sort": 1
+        }
+    ]
+}

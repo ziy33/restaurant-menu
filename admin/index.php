@@ -1,0 +1,1037 @@
+<?php
+session_start();
+
+// Check if user is logged in
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    header('Location: login.php');
+    exit;
+}
+?>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - 卤肉 重庆特色</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'ZCOOL XiaoWei', serif;
+            background: #f5f0e8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #8b0000 0%, #5c0000 100%);
+            color: #fff;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #daa520;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'ZCOOL XiaoWei', serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #daa520 0%, #b8860b 100%);
+            color: #1a0a0a;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(145deg, #ffd700 0%, #daa520 100%);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(145deg, #dc3545 0%, #c82333 100%);
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(145deg, #ff4455 0%, #dc3545 100%);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        /* Section */
+        .section {
+            background: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0d5c0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #daa520;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #8b0000;
+        }
+
+        /* Category List */
+        .category-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .category-card {
+            background: linear-gradient(145deg, #faf6f0 0%, #f0ebe0 100%);
+            border: 2px solid #daa520;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(218, 165, 32, 0.3);
+        }
+
+        .category-info h3 {
+            color: #8b0000;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .category-info span {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .category-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Dish Grid */
+        .dish-section {
+            margin-bottom: 40px;
+        }
+
+        .dish-section-header {
+            background: linear-gradient(135deg, #8b0000 0%, #5c0000 100%);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dish-section-header h3 {
+            color: #daa520;
+            font-size: 18px;
+        }
+
+        .dish-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .dish-card {
+            background: #fff;
+            border: 1px solid #e0d5c0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .dish-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #daa520;
+        }
+
+        .dish-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #f5f0e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .dish-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dish-placeholder {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(145deg, #e8e0d5 0%, #d5c8b8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 14px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .dish-info {
+            padding: 15px;
+        }
+
+        .dish-name {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 2px;
+            font-weight: bold;
+        }
+
+        .dish-name-id {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 6px;
+            font-style: italic;
+        }
+
+        .dish-price {
+            color: #8b0000;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .dish-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 2px solid #daa520;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0d5c0;
+        }
+
+        .modal-header h2 {
+            color: #8b0000;
+            font-size: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: #8b0000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0d5c0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'ZCOOL XiaoWei', serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #daa520;
+        }
+
+        .image-upload-area {
+            border: 2px dashed #e0d5c0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #faf6f0;
+        }
+
+        .image-upload-area:hover {
+            border-color: #daa520;
+            background: #f0ebe0;
+        }
+
+        .image-upload-area.has-image {
+            border-style: solid;
+            border-color: #daa520;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #e0d5c0;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-success {
+            background: linear-gradient(145deg, #28a745 0%, #218838 100%);
+        }
+
+        .toast-error {
+            background: linear-gradient(145deg, #dc3545 0%, #c82333 100%);
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e0d5c0;
+            border-top-color: #daa520;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .main {
+                padding: 15px;
+            }
+
+            .dish-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .category-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <h1>卤肉 重庆特色 - 管理后台</h1>
+        <div class="header-actions">
+            <a href="../menu.php" target="_blank" class="btn btn-primary">查看菜单</a>
+            <button class="btn btn-logout" onclick="logout()">退出登录</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Category Management -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">分类管理</h2>
+                <button class="btn btn-primary" onclick="openCategoryModal()">+ 添加分类</button>
+            </div>
+            <div id="categoryList" class="category-list">
+                <div class="loading">加载中</div>
+            </div>
+        </section>
+
+        <!-- Dish Management -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">菜品管理</h2>
+            </div>
+            <div id="dishContainer">
+                <div class="loading">加载中</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Dish Modal -->
+    <div class="modal-overlay" id="dishModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="dishModalTitle">添加菜品</h2>
+                <button class="modal-close" onclick="closeDishModal()">&times;</button>
+            </div>
+            <form id="dishForm" onsubmit="saveDish(event)">
+                <input type="hidden" id="dishId">
+                <div class="form-group">
+                    <label for="dishName">菜品名称 (中文) *</label>
+                    <input type="text" id="dishName" required placeholder="请输入菜品中文名称">
+                </div>
+                <div class="form-group">
+                    <label for="dishNameId">菜品名称 (Indonesia)</label>
+                    <input type="text" id="dishNameId" placeholder="Nama hidangan dalam Bahasa Indonesia">
+                </div>
+                <div class="form-group">
+                    <label for="dishCategory">分类 *</label>
+                    <select id="dishCategory" required>
+                        <option value="">请选择分类</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dishPrice">价格 (Rp) *</label>
+                    <input type="number" id="dishPrice" required placeholder="例如：88000" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="dishSort">排序</label>
+                    <input type="number" id="dishSort" placeholder="数字越小越靠前" min="0">
+                </div>
+                <div class="form-group">
+                    <label>菜品图片</label>
+                    <div class="image-upload-area" id="imageUploadArea" onclick="document.getElementById('dishImage').click()">
+                        <div id="imageUploadText">点击上传图片</div>
+                        <img id="imagePreview" class="image-preview" style="display: none;">
+                        <input type="file" id="dishImage" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
+                    </div>
+                    <input type="hidden" id="currentImage" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="closeDishModal()">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    <div class="modal-overlay" id="categoryModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="categoryModalTitle">添加分类</h2>
+                <button class="modal-close" onclick="closeCategoryModal()">&times;</button>
+            </div>
+            <form id="categoryForm" onsubmit="saveCategory(event)">
+                <input type="hidden" id="categoryId">
+                <div class="form-group">
+                    <label for="categoryName">分类名称 (中文) *</label>
+                    <input type="text" id="categoryName" required placeholder="例如：干锅系列">
+                </div>
+                <div class="form-group">
+                    <label for="categoryNameId">分类名称 (Indonesia)</label>
+                    <input type="text" id="categoryNameId" placeholder="Contoh: Seri Dry Pot">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="closeCategoryModal()">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Global data
+        let menuData = { restaurant: {}, categories: [], dishes: [] };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMenuData();
+        });
+
+        // Load menu data
+        async function loadMenuData() {
+            try {
+                const response = await fetch('api.php?action=list');
+                const result = await response.json();
+                
+                if (result.success) {
+                    menuData = result.data;
+                    renderCategories();
+                    renderDishes();
+                } else {
+                    showToast('加载数据失败：' + (result.error || '未知错误'), 'error');
+                    document.getElementById('categoryList').innerHTML = '<div class="empty-state"><p>加载失败: ' + escapeHtml(result.error || '') + '</p></div>';
+                    document.getElementById('dishContainer').innerHTML = '<div class="empty-state"><p>加载失败: ' + escapeHtml(result.error || '') + '</p></div>';
+                }
+            } catch (error) {
+                showToast('加载数据失败：' + error.message, 'error');
+                document.getElementById('categoryList').innerHTML = '<div class="empty-state"><p>加载异常: ' + escapeHtml(error.message) + '</p></div>';
+                document.getElementById('dishContainer').innerHTML = '<div class="empty-state"><p>加载异常: ' + escapeHtml(error.message) + '</p></div>';
+            }
+        }
+
+        // Render categories
+        function renderCategories() {
+            const container = document.getElementById('categoryList');
+            
+            if (menuData.categories.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>暂无分类</p></div>';
+                return;
+            }
+
+            // Sort categories by sort value
+            const sortedCategories = [...menuData.categories].sort((a, b) => a.sort - b.sort);
+
+            container.innerHTML = sortedCategories.map(cat => {
+                const dishCount = menuData.dishes.filter(d => d.category_id === cat.id).length;
+                return `
+                    <div class="category-card" data-id="${cat.id}">
+                        <div class="category-info">
+                            <h3>${escapeHtml(cat.name)}</h3>
+                            <span>${dishCount} 个菜品</span>
+                        </div>
+                        <div class="category-actions">
+                            <button class="btn btn-primary btn-small" onclick="editCategory('${cat.id}')">编辑</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteCategory('${cat.id}')">删除</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render dishes grouped by category
+        function renderDishes() {
+            const container = document.getElementById('dishContainer');
+            
+            // Sort categories by sort value
+            const sortedCategories = [...menuData.categories].sort((a, b) => a.sort - b.sort);
+
+            if (sortedCategories.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>请先添加分类</p></div>';
+                return;
+            }
+
+            let html = '';
+            sortedCategories.forEach(cat => {
+                const categoryDishes = menuData.dishes
+                    .filter(d => d.category_id === cat.id)
+                    .sort((a, b) => a.sort - b.sort);
+
+                html += `
+                    <div class="dish-section">
+                        <div class="dish-section-header">
+                            <h3>${escapeHtml(cat.name)}</h3>
+                            <button class="btn btn-primary btn-small" onclick="openDishModal('${cat.id}')">+ 添加菜品</button>
+                        </div>
+                        <div class="dish-grid">
+                            ${categoryDishes.length === 0 
+                                ? '<div class="empty-state"><p>该分类下暂无菜品</p></div>'
+                                : categoryDishes.map(dish => renderDishCard(dish)).join('')
+                            }
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Render single dish card
+        function renderDishCard(dish) {
+            const imageUrl = dish.image ? `../uploads/${dish.image}` : '';
+            const priceFormatted = formatPrice(dish.price);
+
+            return `
+                <div class="dish-card" data-id="${dish.id}">
+                    ${imageUrl 
+                        ? `<div class="dish-image"><img src="${imageUrl}" alt="${escapeHtml(dish.name)}" onerror="this.parentElement.innerHTML='<div class=\\'dish-placeholder\\'>图片加载失败</div>'"></div>`
+                        : `<div class="dish-placeholder">暂无图片</div>`
+                    }
+                    <div class="dish-info">
+                        <div class="dish-name">${escapeHtml(dish.name)}</div>
+                        ${dish.name_id ? '<div class="dish-name-id">' + escapeHtml(dish.name_id) + '</div>' : ''}
+                        <div class="dish-price">${priceFormatted}</div>
+                        <div class="dish-actions">
+                            <button class="btn btn-primary btn-small" onclick="editDish(${dish.id})">编辑</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteDish(${dish.id})">删除</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Populate category dropdown helper
+        function populateCategoryDropdown(selectedId = '') {
+            const categorySelect = document.getElementById('dishCategory');
+            if (!categorySelect) return;
+            categorySelect.innerHTML = '<option value="">请选择分类</option>';
+            if (menuData && menuData.categories) {
+                menuData.categories.sort((a, b) => a.sort - b.sort).forEach(cat => {
+                    const selected = cat.id === selectedId ? 'selected' : '';
+                    const label = cat.name_id ? escapeHtml(cat.name) + ' / ' + escapeHtml(cat.name_id) : escapeHtml(cat.name);
+                    categorySelect.innerHTML += '<option value="' + cat.id + '" ' + selected + '>' + label + '</option>';
+                });
+            }
+        }
+
+        // Open dish modal
+        function openDishModal(categoryId = '') {
+            document.getElementById('dishModalTitle').textContent = '添加菜品';
+            document.getElementById('dishForm').reset();
+            document.getElementById('dishId').value = '';
+            document.getElementById('currentImage').value = '';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('imageUploadText').style.display = 'block';
+            document.getElementById('imageUploadArea').classList.remove('has-image');
+
+            // Populate category dropdown
+            populateCategoryDropdown(categoryId);
+
+            document.getElementById('dishModal').classList.add('active');
+        }
+
+        // Close dish modal
+        function closeDishModal() {
+            document.getElementById('dishModal').classList.remove('active');
+        }
+
+        // Edit dish
+        function editDish(id) {
+            const dish = menuData.dishes.find(d => d.id === id);
+            if (!dish) return;
+
+            document.getElementById('dishModalTitle').textContent = '编辑菜品';
+            document.getElementById('dishId').value = dish.id;
+            document.getElementById('dishName').value = dish.name;
+            document.getElementById('dishNameId').value = dish.name_id || '';
+            
+            // Populate and select category
+            populateCategoryDropdown(dish.category_id);
+            
+            document.getElementById('dishPrice').value = dish.price;
+            document.getElementById('dishSort').value = dish.sort || '';
+            document.getElementById('currentImage').value = dish.image || '';
+
+            // Show image preview if exists
+            const imagePreview = document.getElementById('imagePreview');
+            const imageUploadText = document.getElementById('imageUploadText');
+            const uploadArea = document.getElementById('imageUploadArea');
+
+            if (dish.image) {
+                imagePreview.src = `../uploads/${dish.image}`;
+                imagePreview.style.display = 'block';
+                imageUploadText.style.display = 'none';
+                uploadArea.classList.add('has-image');
+            } else {
+                imagePreview.style.display = 'none';
+                imageUploadText.style.display = 'block';
+                uploadArea.classList.remove('has-image');
+            }
+
+            document.getElementById('dishModal').classList.add('active');
+        }
+
+        // Save dish
+        async function saveDish(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('dishId').value;
+            const name = document.getElementById('dishName').value;
+            const name_id = document.getElementById('dishNameId').value;
+            const category_id = document.getElementById('dishCategory').value;
+            const price = parseInt(document.getElementById('dishPrice').value);
+            const sort = parseInt(document.getElementById('dishSort').value) || 0;
+            const image = document.getElementById('currentImage').value;
+
+            if (!name || !category_id || price <= 0) {
+                showToast('请填写完整信息', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('action', id ? 'edit_dish' : 'add_dish');
+            formData.append('name', name);
+            formData.append('name_id', name_id);
+            formData.append('category_id', category_id);
+            formData.append('price', price);
+            formData.append('sort', sort);
+            formData.append('image', image);
+            if (id) formData.append('id', id);
+
+            try {
+                const response = await fetch('api.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast(id ? '菜品已更新' : '菜品已添加', 'success');
+                    closeDishModal();
+                    loadMenuData();
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (error) {
+                showToast('保存失败：' + error.message, 'error');
+            }
+        }
+
+        // Delete dish
+        async function deleteDish(id) {
+            if (!confirm('确定要删除这个菜品吗？此操作不可恢复。')) return;
+
+            try {
+                const formData = new FormData();
+                formData.append('action', 'delete_dish');
+                formData.append('id', id);
+
+                const response = await fetch('api.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('菜品已删除', 'success');
+                    loadMenuData();
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (error) {
+                showToast('删除失败：' + error.message, 'error');
+            }
+        }
+
+        // Handle image selection
+        async function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                showToast('仅支持 JPG、PNG、GIF、WebP 格式', 'error');
+                return;
+            }
+
+            // Validate file size (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('文件大小不能超过 5MB', 'error');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('imageUploadText').textContent = '上传中...';
+
+            // Upload file
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const response = await fetch('upload.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('currentImage').value = result.filename;
+                    
+                    // Show preview
+                    const imageUrl = `../uploads/${result.filename}?t=${Date.now()}`;
+                    const imagePreview = document.getElementById('imagePreview');
+                    const imageUploadText = document.getElementById('imageUploadText');
+                    
+                    imagePreview.src = imageUrl;
+                    imagePreview.style.display = 'block';
+                    imageUploadText.style.display = 'none';
+                    document.getElementById('imageUploadArea').classList.add('has-image');
+                    
+                    showToast('图片上传成功', 'success');
+                } else {
+                    showToast(result.error, 'error');
+                    document.getElementById('imageUploadText').textContent = '点击上传图片';
+                }
+            } catch (error) {
+                showToast('上传失败：' + error.message, 'error');
+                document.getElementById('imageUploadText').textContent = '点击上传图片';
+            }
+
+            // Reset file input
+            event.target.value = '';
+        }
+
+        // Category functions
+        function openCategoryModal() {
+            document.getElementById('categoryModalTitle').textContent = '添加分类';
+            document.getElementById('categoryForm').reset();
+            document.getElementById('categoryId').value = '';
+            document.getElementById('categoryModal').classList.add('active');
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('categoryModal').classList.remove('active');
+        }
+
+        function editCategory(id) {
+            const category = menuData.categories.find(c => c.id === id);
+            if (!category) return;
+
+            document.getElementById('categoryModalTitle').textContent = '编辑分类';
+            document.getElementById('categoryId').value = id;
+            document.getElementById('categoryName').value = category.name;
+            document.getElementById('categoryNameId').value = category.name_id || '';
+            document.getElementById('categoryModal').classList.add('active');
+        }
+
+        async function saveCategory(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('categoryId').value;
+            const name = document.getElementById('categoryName').value;
+            const name_id = document.getElementById('categoryNameId').value;
+
+            if (!name) {
+                showToast('请输入分类名称', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('action', id ? 'edit_category' : 'add_category');
+            formData.append('name', name);
+            formData.append('name_id', name_id);
+            if (id) formData.append('id', id);
+
+            try {
+                const response = await fetch('api.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast(id ? '分类已更新' : '分类已添加', 'success');
+                    closeCategoryModal();
+                    loadMenuData();
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (error) {
+                showToast('保存失败：' + error.message, 'error');
+            }
+        }
+
+        async function deleteCategory(id) {
+            const dishCount = menuData.dishes.filter(d => d.category_id === id).length;
+            const message = dishCount > 0 
+                ? `确定要删除这个分类吗？这将同时删除该分类下的 ${dishCount} 个菜品。此操作不可恢复。`
+                : '确定要删除这个分类吗？此操作不可恢复。';
+
+            if (!confirm(message)) return;
+
+            try {
+                const formData = new FormData();
+                formData.append('action', 'delete_category');
+                formData.append('id', id);
+
+                const response = await fetch('api.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('分类已删除', 'success');
+                    loadMenuData();
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (error) {
+                showToast('删除失败：' + error.message, 'error');
+            }
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                window.location.href = 'login.php?action=logout';
+            }
+        }
+
+        // Utility functions
+        function formatPrice(price) {
+            return 'Rp' + price.toLocaleString('id-ID');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast toast-' + type + ' show';
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
